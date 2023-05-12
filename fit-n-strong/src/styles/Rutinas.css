@@ -1,0 +1,27 @@
+.container {
+    width: 80%;
+    margin: 3rem auto;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 1.5rem;
+}
+
+.table>:not(caption)>*>* {
+    padding: .8rem !important;
+}
+
+.actions {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+}
+
+.add-btn-container {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 1.5rem;
+}
