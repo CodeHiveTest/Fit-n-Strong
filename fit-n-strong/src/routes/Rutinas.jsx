@@ -26,6 +26,10 @@ export default function Rutinas() {
         getRoutines();
     }, []);
 
+    useEffect(() => {
+        console.log(routines);
+    }, [routines]);
+
     function getRoutines() {
         axios.get('http://20.226.52.146:8080/rutinas', {
             headers: {
@@ -52,7 +56,7 @@ export default function Rutinas() {
             <Modal isOpen={modalNew} fade={false} toggle={toggleNew}>
                 <ModalHeader toggle={toggleNew}>Crear Rutina</ModalHeader>
                 <ModalBody>
-                    <NuevaRutina props={{toggleNew}} />
+                    <NuevaRutina toggle={toggleNew} getRoutines={getRoutines} />
                 </ModalBody>
             </Modal>
 

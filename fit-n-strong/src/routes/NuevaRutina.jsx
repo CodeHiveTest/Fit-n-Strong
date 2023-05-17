@@ -1,36 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import axios from 'axios';
 
-export default function NuevaRutina(props) {
+export default function NuevaRutina({toggle, getRoutines}) {
 
     const [routineName, setRoutineName] = useState('');
     const [grupo, setGrupo] = useState('');
+
+    useEffect(() => {
+        getRoutines();
+    }, []);
 
     function submit(event) {
         event.preventDefault();
         console.log("Se mandó");
         console.log(routineName, " - ", grupo);
         axios.post('http://20.226.52.146:8080/rutinas', {
-            // nombre: routineName,
-            // grupo_muscular: grupo
             headers: {
                 "Content-Type": "text/plain",
             },
             nombre: routineName,
             grupo_muscular: grupo
         })
-        .then(response => console.log(response))
+        .then(response => response.data)
         .then(data => {
             if(data.status === 201) {
-                alert("Rutina creada con éxito");
+                getRoutines();
             }
         })
         .catch(error => {
             alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
         });
 
-        // props.toggle();
+        toggle();
     }
 
   return (
@@ -88,9 +90,9 @@ export default function NuevaRutina(props) {
             <Button color="primary" type='submit'>
                 Crear Rutina
             </Button>{' '}
-            <Button color="secondary" onClick={props.toggle}>
+            <Button color="secondary" onClick={toggle}>
                 Cancelar
-            </Button>
+            </Button>{' '}
             </Col>
         </FormGroup>
         </Form>
