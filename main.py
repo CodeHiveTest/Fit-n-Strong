@@ -7,10 +7,12 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-import json
+
+from sqlalchemy.exc import SQLAlchemyError
+
+
 from flask import Flask,jsonify,request
 
-import flask
 
 from sqlalchemy import create_engine
 
@@ -19,7 +21,7 @@ database_addres = 'mysql+pymysql://fit:Testing_2023@localhost:3306/fitstrong'
 
 engine = create_engine(database_addres, echo = False)
 
-from sqlalchemy import Select, insert, delete
+from sqlalchemy import Select
 
 from sqlalchemy.orm import Session
 
@@ -48,89 +50,203 @@ class Ejercicio(Base):
     rutina: Mapped["Rutina"] = relationship(back_populates="ejercicio")
 
 
-#stmt = Select(Ejercicio).where(Ejercicio.ejercicio_id == 1)
-#session.execute(stmt).all()
-#for i in session.scalars(stmt):
-#    print(i.nombre)
-
+from flask_cors import CORS, cross_origin
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/rutinas', methods=['OPTIONS'])
-def reply_headers():
-    a = jsonify({"a":"1"})
-    a.headers['Access-Control-Allow-Headers'] = "content_type"
-    a.headers['Access-Control-Allow-Origin'] = '*'
-   # a.headers['Content-Type'] = "text/plain"
-    a.headers['Access-Control-Allow-Methods'] = "PUT, GET, POST, DELETE, OPTIONS"
-    return a
+def _build_cors_preflight_response():
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    return response
+
+def _corsify_actual_response(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/rutina', methods=['GET'])
+def get_rutina():
+    id_rutina = request.args.get("id")
+    stmt = Select(Rutina).where(Rutina.rutina_id == id_rutina)
+    try:
+        rutina = session.scalars(stmt).one()
+    except SQLAlchemyError as e:
+        return _corsify_actual_response(jsonify({"status": 500}))
+    return jsonify({"nombre":rutina.nombre, "grupo_muscular": rutina.grupo_muscular})
+
+@app.route('/ejercicio', methods=['GET'])
+def get_ejercicio():
+    id_ejercicio = request.args.get("id")
+    stmt = Select(Ejercicio).where(Ejercicio.ejercicio_id == id_ejercicio)
+    try:
+        ejercicio = session.scalars(stmt).one()
+    except SQLAlchemyError as e:
+        return _corsify_actual_response(jsonify({"status": 500}))
+    return jsonify({"nombre":ejercicio.nombre,
+                    "repeticiones":ejercicio.repeticiones,
+                     "duracion": ejercicio.duracion,
+                      "peso": ejercicio.peso })
+
 
 @app.route('/rutinas', methods=['GET'])
 def get_rutinas():
-    #content = request.json()
     stmt = Select(Rutina)
-    d = dict()
-    if session.scalar(stmt) == None:
+    d = []
+    if session.scalars(stmt) == None:
         response = jsonify({"response": "No hay rutina"})
         response.headers['Access-Control-Allow-Origin'] = '*'
     for i in session.scalars(stmt):
-        d[str(i.rutina_id)] = {"nombre": str(i.nombre), "grupo_muscular": str(i.grupo_muscular)}
+        d.append({"nombre": str(i.nombre), "grupo_muscular": str(i.grupo_muscular), "id": i.rutina_id})
 
-    response = jsonify(d)
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    #print(a)
-    return(response)
+    return _corsify_actual_response(jsonify(d))
 
 @app.route('/ejercicios', methods=['GET'])
 def get_ejercicios_by_rutina():
-    rut_id = request.args.get("rut_id")
+    rut_id = request.args.get("id")
     stmt = Select(Ejercicio).where(Ejercicio.rutina_id == rut_id)
-    d = dict()
-    if session.scalar(stmt) == None:
+    d = [] 
+    if session.scalars(stmt) == None:
         response = jsonify({"response":"No se encontraron ejercicios asociados a esa rutina"})
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     for i in session.scalars(stmt):
-        d[str(i.ejercicio_id)] = {"nombre": i.nombre,
-				  "repeticiones": i.repeticiones,
-				  "duracion": i.duracion,
- 				  "peso": i.peso}
+        d.append({"ejercicio_id": i.ejercicio_id,
+                "nombre": i.nombre,
+				"repeticiones": i.repeticiones,
+				"duracion": i.duracion,
+ 				"peso": i.peso})
     response = jsonify(d)
     response.headers['Access-Control-Allow-Origin'] = '*'
     return(response)
 
-@app.route('/rutinas', methods=['POST'])
+
+@app.route('/rutinas', methods=['POST', 'OPTIONS','DELETE'])
+@cross_origin()
 def crear_rutina():
+    if request.method == 'OPTIONS':
+        return _build_cors_preflight_response()
+    elif request.method == 'DELETE':
+        rut_id = request.args.get('id')
+        rut = session.get(Rutina,rut_id)
+        if rut == None:
+            return(jsonify({"status":"No existe la rutina"}))
+        try:
+            session.delete(rut)
+            session.commit()
+        except SQLAlchemyError as e:
+            session.rollback()
+            return _corsify_actual_response(jsonify({"status": 500}))
+        return _corsify_actual_response(jsonify({"status": 201}))
+        
+    elif request.method == 'POST':
+        content = request.get_json()
+        newRutina = Rutina(nombre = content["nombre"],
+        grupo_muscular = content["grupo_muscular"])
+        session.add(newRutina)
+        try:
+            session.commit()
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            print(f"\n {error} \n")
+            session.rollback()
+            return _corsify_actual_response(jsonify({"status": 500}))
+        return _corsify_actual_response(jsonify({"status": 201}))
+    else:
+       raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+    
+@app.route('/ejercicios', methods=['POST', 'OPTIONS','DELETE'])
+@cross_origin()
+def crear_ejercicio():
+    if request.method == 'OPTIONS':
+        return _build_cors_preflight_response()
+
+    elif request.method == 'DELETE':
+        rut_id = request.args.get('id')
+        rut = session.get(Ejercicio,rut_id)
+        response = jsonify(dict())
+        if rut == None:
+            return(jsonify({"status":"No existe la rutina"}))
+        try:
+            session.delete(rut)
+            session.commit()
+        except SQLAlchemyError as e:
+            session.rollback()
+            return _corsify_actual_response(jsonify({"status": 500}))
+        return _corsify_actual_response(jsonify({"status": 200}))
+
+
+    elif request.method == 'POST':
+
+        content = request.get_json()
+        newEjercicio = Ejercicio(nombre = content["nombre"])
+        if "rutina_id" not in content:
+            return(jsonify({"Respuesta":"No se añadio la rutina a la que pertence"}))
+        newEjercicio.rutina_id = content["rutina_id"]
+        if "repeticiones" in content:
+            newEjercicio.repeticiones = content["repeticiones"]
+        if "duracion" in content:
+            newEjercicio.duracion = content["duracion"]
+        if "peso" in content:
+            newEjercicio.peso = content["peso"]
+        session.add(newEjercicio)
+        try:
+            session.commit()
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            print(f"\n {error} \n")
+            session.rollback()
+            return _corsify_actual_response(jsonify({"status": 500}))
+        return _corsify_actual_response(jsonify({"status": 201}))
+    else:
+        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+
+
+
+@app.route('/rutinas', methods=['PUT'])
+def update_rutina():
     content = request.get_json()
-    newRutina = Rutina(nombre = content["nombre"],
-	grupo_muscular = content["grupo_muscular"])
-    session.add(newRutina)
-    session.commit()
-    response = jsonify({"status":201})
-   # response.headers['Content-Type'] = "text/plain"
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = "PUT, GET, POST, DELETE, OPTIONS"
-    return(response)
+    if "rutina_id" not in content:
+        return(jsonify({"Respuesta":"No se añadió el id de la rutina"}))
+    stmt = Select(Rutina).where(Rutina.rutina_id == content["rutina_id"])
+    rutina = session.scalars(stmt).one()
+    if "nombre" in content:
+        rutina.nombre = content["nombre"]
+    if "grupo_muscular" in content:
+        rutina.grupo_muscular = content["grupo_muscular"]
+    try:
+        session.commit()
+        return _corsify_actual_response(jsonify({"status": 200}))
+    except SQLAlchemyError as e:
+        session.rollback()    
+        return _corsify_actual_response(jsonify({"status": 500}))
 
-@app.route('/rutinas', methods=['DELETE'])
-def delete_rutina():
-    rut_id = request.args.get('id')
-    rut = session.get(Rutina,rut_id)
-    if rut == None:
-        print("NOOOOOOOOOOOOOOOOOOOO")
-        return(jsonify({"status":"No existe la rutina"}))
-    session.delete(rut)
-    session.commit()
-    response = Response(status = 201)
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    return(response)
+@app.route('/ejercicios', methods=['PUT'])
+def update_ejercicio():
+    content = request.get_json()
+    print(content)
+    if "ejercicio_id" not in content:
+        return(jsonify({"Respuesta":"No se añadió el id de la rutina"}))
+    stmt = Select(Ejercicio).where(Ejercicio.ejercicio_id == content["ejercicio_id"])
+    ejercicio = session.scalars(stmt).one()
+    if "nombre" in content:
+        ejercicio.nombre = content["nombre"]
+    if "repeticiones" in content:
+        ejercicio.repeticiones = content["repeticiones"]
+    if "duracion" in content:
+        ejercicio.duracion = content["duracion"]
+    if "peso" in content:
+        ejercicio.peso = content["peso"]
+    try:
+        print("\n Se intenta update \n")
+        session.commit()
+        return _corsify_actual_response(jsonify({"status": 200}))
+    except SQLAlchemyError as e:
+        session.rollback()    
+        return _corsify_actual_response(jsonify({"status": 500}))
 
-@app.route('/rutina', methods=['GET'])
-def get_rutina():
-    rut_id = request.args.get('id')
-    stmt = Select(Ejercicio).where(Ejercicio.rutina_id == rut_id)
-    d = dict()
-    return(jsonify({"a":"alo"}))
-    #for i in session.scalars(stmt):
+
 
 
 if __name__ == '__main__':
