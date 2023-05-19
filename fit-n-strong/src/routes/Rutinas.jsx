@@ -88,7 +88,7 @@ export default function Rutinas() {
                                     <RemoveRedEyeIcon /> Ver
                                 </Button>
 
-                                <Button key={routine.id} onClick={() => {toggleEdit(); setModalEditId(routine.id)}} color="warning">
+                                <Button onClick={() => {toggleEdit(); setModalEditId(routine.id)}} color="warning">
                                     <EditIcon /> Editar
                                 </Button>
 

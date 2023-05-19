@@ -4,9 +4,6 @@ import axios from "axios";
 
 export default function EditarRutina({id, toggle, getRoutines}) {
 
-    const [routineName, setRoutineName] = useState('');
-    const [grupo, setGrupo] = useState('');
-
     useEffect(() => {
         getRoutines();
     }, []);
@@ -14,9 +11,7 @@ export default function EditarRutina({id, toggle, getRoutines}) {
     // hacer llamada a la API para obtener los datos de la rutina que se está modificando
     function submit(event) {
         event.preventDefault();
-        console.log("Se mandó");
-        console.log(routineName, " - ", grupo);
-        axios.delete('http://20.226.52.146:8080/rutinas/?id=' + id, {
+        axios.delete('http://20.226.52.146:8080/rutinas?id=' + id, {
             headers: {
                 "Content-Type": "text/plain",
             },

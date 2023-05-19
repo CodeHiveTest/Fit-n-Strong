@@ -6,11 +6,24 @@ export default function EditarRutina({id, toggle, getRoutines}) {
 
     const [routineName, setRoutineName] = useState('');
     const [grupo, setGrupo] = useState('');
-    const [routine, setRoutine] = useState();
+    const [routine, setRoutine] = useState({nombre: '', grupo_muscular: ''});
 
     useEffect(() => {
-        setRoutine();
+        getRoutine();
     }, []);
+    
+    function getRoutine() {
+        axios.get('http://20.226.52.146:8080/rutina?id=' + id, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => response.data)
+        .then(data => {setRoutineName(data.nombre); setGrupo(data.grupo_muscular)})
+        .catch(error => {
+            console.log("Hubo un error al intentar obtener las rutinas", error);
+        });
+    }
 
     // hacer llamada a la API para obtener los datos de la rutina que se está modificando
     function submit(event) {
@@ -28,6 +41,7 @@ export default function EditarRutina({id, toggle, getRoutines}) {
         .then(response => response.data)
         .then(data => {
             if(data.status === 200) {
+                console.log("Paso");
                 getRoutines();
             }
         })
