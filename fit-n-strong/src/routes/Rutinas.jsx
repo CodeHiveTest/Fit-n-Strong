@@ -1,13 +1,14 @@
-import { React, useEffect, useState, setState } from "react";
+import { React, useEffect, useState } from "react";
 import { Button, Table, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom';
+import { useNavigate, redirect } from 'react-router-dom';
 import "./../styles/Rutinas.css";
 import NuevaRutina from "./NuevaRutina";
 import EditarRutina from "./EditarRutina";
+import EliminarRutina from "./EliminarRutina";
 import axios from "axios";
 
 export default function Rutinas() {
@@ -23,6 +24,8 @@ export default function Rutinas() {
     const toggleDelete = () => setModalDelete(!modalDelete)
 
     const [routines, setRoutines] = useState([]);
+
+    const navigate = useNavigate();
 
     // traer rutinas creadas por el usuario de la API
     useEffect(() => {
@@ -45,6 +48,10 @@ export default function Rutinas() {
             console.log("Hubo un error al intentar obtener las rutinas", error);
         });
     }
+
+    const handleVerRutina = (id) => {
+        navigate('/ver-rutina/' + id);
+    };
 
     return (
         <div className='container'>
@@ -77,11 +84,9 @@ export default function Rutinas() {
                             <th>{routine.nombre}</th>
                             <td>{routine.grupo_muscular}</td>
                             <td className='actions'>
-                                <Link to='/ver-rutina'>
-                                    <Button color="success">
-                                        <RemoveRedEyeIcon /> Ver
-                                    </Button>
-                                </Link>
+                                <Button color="success" onClick={() => handleVerRutina(routine.id)}>
+                                    <RemoveRedEyeIcon /> Ver
+                                </Button>
 
                                 <Button key={routine.id} onClick={() => {toggleEdit(); setModalEditId(routine.id)}} color="warning">
                                     <EditIcon /> Editar
@@ -103,16 +108,9 @@ export default function Rutinas() {
                                 <Modal isOpen={modalDeleteId === routine.id && modalDelete} fade={false} toggle={toggleDelete}>
                                     <ModalHeader toggle={toggleDelete}>Eliminar Rutina</ModalHeader>
                                     <ModalBody>
-                                    ¿Está seguro que desea eliminar esta rutina? Esta acción no se puede deshacer...
+                                        <EliminarRutina id={routine.id} toggle={toggleDelete} getRoutines={getRoutines} />
                                     </ModalBody>
-                                    <ModalFooter>
-                                    <Button color="danger" type="submit">
-                                        Eliminar
-                                    </Button>{' '}
-                                    <Button color="secondary" onClick={toggleDelete}>
-                                        Cancelar
-                                    </Button>
-                                    </ModalFooter>
+                                    
                                 </Modal>
                             </td>
                         </tr>

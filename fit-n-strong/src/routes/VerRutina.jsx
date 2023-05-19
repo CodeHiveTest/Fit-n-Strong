@@ -7,8 +7,11 @@ import AgregarEjercicio from "./AgregarEjercicio";
 import EditarEjercicio from "./EditarEjercicio";
 
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-export default function VerRutinatry() {
+export default function VerRutina() {
+
+    const {id} = useParams();
 
     const [modalNew, setModalNew] = useState(false);
     const [modalEdit, setModalEdit] = useState(false);
@@ -19,16 +22,31 @@ export default function VerRutinatry() {
     const toggleDelete = () => setModalDelete(!modalDelete);
 
     const [exercises, setExercises] = useState([]);
+    const [routine, setRoutine] = useState({nombre: ''});
 
     // traer ejercicios de la rutina seleccionada
     useEffect(() => {
+        getRoutine();
         getExercises();
     }, []);
+    
+    function getRoutine() {
+        axios.get('http://20.226.52.146:8080/rutina?id=' + id, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => response.data)
+        .then(data => setRoutine({nombre: data.nombre}))
+        .catch(error => {
+            console.log("Hubo un error al intentar obtener las rutinas", error);
+        });
+    }
 
     function getExercises() {
-        axios.get('http://20.226.52.146:8080/ejercicios?rut_id=1', {
+        axios.get('http://20.226.52.146:8080/ejercicios?id=' + id, {
             headers: {
-            "Content-Type": "application/json",
+                "Content-Type": "application/json",
             },
         })
         .then(response => response.data)
@@ -40,7 +58,7 @@ export default function VerRutinatry() {
 
     return (
         <div className="container">
-            <h2 className="title">Rutina 'brazos'</h2>
+            <h2 className="title">Rutina {routine.nombre}</h2>
 
             <div className="add-btn-container">
                 <Button onClick={toggleNew} className='add-button' color="success">

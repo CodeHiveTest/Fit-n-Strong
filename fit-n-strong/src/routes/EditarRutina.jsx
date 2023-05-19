@@ -6,9 +6,10 @@ export default function EditarRutina({id, toggle, getRoutines}) {
 
     const [routineName, setRoutineName] = useState('');
     const [grupo, setGrupo] = useState('');
+    const [routine, setRoutine] = useState();
 
     useEffect(() => {
-        getRoutines();
+        setRoutine();
     }, []);
 
     // hacer llamada a la API para obtener los datos de la rutina que se está modificando
@@ -26,7 +27,7 @@ export default function EditarRutina({id, toggle, getRoutines}) {
         })
         .then(response => response.data)
         .then(data => {
-            if(data.status === 201) {
+            if(data.status === 200) {
                 getRoutines();
             }
         })

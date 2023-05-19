@@ -16,7 +16,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const routes = createBrowserRouter([
   {path: '/', element: <Home></Home>, errorElement: <h1>Error 404</h1>}, 
   {path: '/rutinas', element: <Rutinas></Rutinas>},
-  {path: '/ver-rutina', element: <VerRutina></VerRutina>}
+  {path: '/ver-rutina/:id', element: <VerRutina></VerRutina>}
 ]);
 
 root.render(
