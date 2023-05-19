@@ -43,7 +43,7 @@ export default function AgregarEjercicio({id, toggle, getExercises, routineId}) 
             repeticiones: reps,
             duracion: duration,
             peso: peso,
-            rutina_id: routineId
+            ejercicio_id: id
         })
         .then(response => response.data)
         .then(data => {
