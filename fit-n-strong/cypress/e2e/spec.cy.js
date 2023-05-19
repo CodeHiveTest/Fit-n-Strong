@@ -65,7 +65,7 @@ describe('test cases 1', () => {
     cy.contains('Agregar Ejercicio')
     cy.get('td:last .btn-danger').click()
     cy.wait(10)
-    cy.get('.btn-danger').click()
+    cy.get('.modal-footer .btn-danger').click()
   })
 
   it('Borrar rutina - UC03 Done', () => {
