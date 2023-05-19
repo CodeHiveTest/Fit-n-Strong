@@ -14,10 +14,13 @@ export default function Rutinas() {
     const [modalNew, setModalNew] = useState(false);
     const [modalEdit, setModalEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
+
+    const [modalEditId, setModalEditId] = useState(0);
+    const [modalDeleteId, setModalDeleteId] = useState(0);
   
     const toggleNew = () => setModalNew(!modalNew);
     const toggleEdit = () => setModalEdit(!modalEdit);
-    const toggleDelete = () => setModalDelete(!modalDelete);
+    const toggleDelete = () => setModalDelete(!modalDelete)
 
     const [routines, setRoutines] = useState([]);
 
@@ -76,30 +79,34 @@ export default function Rutinas() {
                             <td className='actions'>
                                 <Link to='/ver-rutina'>
                                     <Button color="success">
-                                    <RemoveRedEyeIcon /> Ver
+                                        <RemoveRedEyeIcon /> Ver
                                     </Button>
                                 </Link>
 
-                                <Button onClick={toggleEdit} color="warning">
+                                <Button key={routine.id} onClick={() => {toggleEdit(); setModalEditId(routine.id)}} color="warning">
                                     <EditIcon /> Editar
                                 </Button>
-                                <Modal isOpen={modalEdit} fade={false} toggle={toggleEdit}>
+
+                                <Modal key={routine.id} isOpen={modalEditId === routine.id && modalEdit} fade={false} 
+                                    toggle={toggleEdit}>
+
                                     <ModalHeader toggle={toggleEdit}>Editar Rutina</ModalHeader>
                                     <ModalBody>
-                                        <EditarRutina  toggle={toggleEdit} getRoutines={getRoutines} />
+                                        <EditarRutina id={routine.id} toggle={toggleEdit} getRoutines={getRoutines} />
                                     </ModalBody>
+
                                 </Modal>
 
-                                <Button onClick={toggleDelete} color="danger">
+                                <Button onClick={() => {toggleDelete(); setModalDeleteId(routine.id)}} color="danger">
                                     <DeleteIcon /> Eliminar
                                 </Button>
-                                <Modal isOpen={modalDelete} fade={false} toggle={toggleDelete}>
+                                <Modal isOpen={modalDeleteId === routine.id && modalDelete} fade={false} toggle={toggleDelete}>
                                     <ModalHeader toggle={toggleDelete}>Eliminar Rutina</ModalHeader>
                                     <ModalBody>
                                     ¿Está seguro que desea eliminar esta rutina? Esta acción no se puede deshacer...
                                     </ModalBody>
                                     <ModalFooter>
-                                    <Button color="danger" onClick={toggleDelete}>
+                                    <Button color="danger" type="submit">
                                         Eliminar
                                     </Button>{' '}
                                     <Button color="secondary" onClick={toggleDelete}>

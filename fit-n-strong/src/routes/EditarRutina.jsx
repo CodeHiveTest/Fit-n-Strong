@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Col, Input } from 'reactstrap';
 import axios from "axios";
 
-export default function EditarRutina({toggle, getRoutines}) {
+export default function EditarRutina({id, toggle, getRoutines}) {
 
     const [routineName, setRoutineName] = useState('');
     const [grupo, setGrupo] = useState('');
@@ -20,7 +20,7 @@ export default function EditarRutina({toggle, getRoutines}) {
             headers: {
                 "Content-Type": "text/plain",
             },
-            rutina_id: routineName,
+            rutina_id: id,
             nombre: routineName,
             grupo_muscular: grupo
         })
@@ -37,58 +37,50 @@ export default function EditarRutina({toggle, getRoutines}) {
         toggle();
     }
 
-  return (
-    <Form onSubmit={submit}>
-        <FormGroup row>
-            <Label
-            for="name"
-            sm={2}
-            >
-            Nombre
-            </Label>
-            <Col sm={10}>
-            <Input
-                id="name"
-                name="name"
-                placeholder="Ingrese el nombre de la rutina"
-                type="name"
-            />
-            </Col>
-        </FormGroup>
-        <FormGroup row>
-            <Label
-            for="grupo"
-            sm={2}
-            >
-            Grupo muscular
-            </Label>
-            <Col sm={10}>
-            <Input
-                id="grupo"
-                name="grupo"
-                placeholder="Indique el grupo muscular que pertenece"
-                type="grupo"
-            />
-            </Col>
-        </FormGroup>
-        <FormGroup
-            check
-            row
-        >
-            <Col
-            sm={{
-                offset: 2,
-                size: 10
-            }}
-            >
-            <Button color="primary" onClick={toggle}>
-                Guardar
-            </Button>{' '}
-            <Button color="secondary" onClick={toggle}>
-                Cancelar
-            </Button>
-            </Col>
-        </FormGroup>
+    return (
+        <Form onSubmit={submit}>
+            <FormGroup row>
+                <Label for="name" sm={2}>Nombre</Label>
+                <Col sm={10}>
+                    <Input
+                        id="name"
+                        name="name"
+                        placeholder="Ingrese el nombre de la rutina"
+                        type="name"
+                        value={routineName}
+                        onChange={(e) => {
+                            setRoutineName(e.target.value);
+                        }}
+                    />
+                </Col>
+            </FormGroup>
+            <FormGroup row>
+                <Label for="grupo" sm={2}>
+                Grupo muscular
+                </Label>
+                <Col sm={10}>
+                    <Input
+                        id="grupo"
+                        name="grupo"
+                        placeholder="Indique el grupo muscular que pertenece"
+                        type="grupo"
+                        value={grupo}
+                        onChange={(e) => {
+                            setGrupo(e.target.value);
+                        }}
+                    />
+                </Col>
+            </FormGroup>
+            <FormGroup check row>
+                <Col sm={{ offset: 2, size: 10 }}>
+                <Button color="primary" type='submit'>
+                    Crear Rutina
+                </Button>{' '}
+                <Button color="secondary" onClick={toggle}>
+                    Cancelar
+                </Button>{' '}
+                </Col>
+            </FormGroup>
         </Form>
-  );
+    );
 }
