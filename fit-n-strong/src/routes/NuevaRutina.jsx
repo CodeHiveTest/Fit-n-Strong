@@ -59,7 +59,7 @@ export default function NuevaRutina({toggle, getRoutines}) {
         </FormGroup>
         <FormGroup row>
             <Label
-            for="name"
+            for="grupo"
             sm={2}
             >
             Grupo muscular

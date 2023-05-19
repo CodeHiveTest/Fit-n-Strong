@@ -86,7 +86,7 @@ export default function Rutinas() {
                                 <Modal isOpen={modalEdit} fade={false} toggle={toggleEdit}>
                                     <ModalHeader toggle={toggleEdit}>Editar Rutina</ModalHeader>
                                     <ModalBody>
-                                        <EditarRutina props={{toggleDelete}} />
+                                        <EditarRutina  toggle={toggleEdit} getRoutines={getRoutines} />
                                     </ModalBody>
                                 </Modal>
 
