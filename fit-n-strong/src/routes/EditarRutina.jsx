@@ -6,7 +6,6 @@ export default function EditarRutina({id, toggle, getRoutines}) {
 
     const [routineName, setRoutineName] = useState('');
     const [grupo, setGrupo] = useState('');
-    const [routine, setRoutine] = useState({nombre: '', grupo_muscular: ''});
 
     useEffect(() => {
         getRoutine();
@@ -21,7 +20,7 @@ export default function EditarRutina({id, toggle, getRoutines}) {
         .then(response => response.data)
         .then(data => {setRoutineName(data.nombre); setGrupo(data.grupo_muscular)})
         .catch(error => {
-            console.log("Hubo un error al intentar obtener las rutinas", error);
+            console.log("Hubo un error al intentar obtener la rutina", error);
         });
     }
 

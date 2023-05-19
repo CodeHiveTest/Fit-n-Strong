@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import axios from 'axios';
 
-export default function AgregarEjercicio({toggle, getExercises, routineId}) {
+export default function AgregarEjercicio({id, toggle, getExercises, routineId}) {
 
     const [exerciseName, setExerciseName] = useState('');
     const [reps, setReps] = useState(0);
@@ -10,14 +10,32 @@ export default function AgregarEjercicio({toggle, getExercises, routineId}) {
     const [peso, setPeso] = useState(0);
 
     useEffect(() => {
-        getExercises();
+        getExercise();
     }, []);
+    
+    function getExercise() {
+        axios.get('http://20.226.52.146:8080/ejercicio?id=' + id, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => response.data)
+        .then(data => {
+            setExerciseName(data.nombre);
+            setReps(data.repeticiones);
+            setDuration(data.duracion);
+            setPeso(data.peso);
+        })
+        .catch(error => {
+            console.log("Hubo un error al intentar obtener el ejercicio", error);
+        });
+    }
 
     function submit(event) {
         event.preventDefault();
         console.log("Se mandó");
         console.log(exerciseName, " - ", reps);
-        axios.post('http://20.226.52.146:8080/ejercicios', {
+        axios.put('http://20.226.52.146:8080/ejercicios', {
             headers: {
                 "Content-Type": "text/plain",
             },
@@ -29,12 +47,12 @@ export default function AgregarEjercicio({toggle, getExercises, routineId}) {
         })
         .then(response => response.data)
         .then(data => {
-            if(data.status === 201) {
+            if(data.status === 200) {
                 getExercises();
             }
         })
         .catch(error => {
-            alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
+            alert("Ocurrió el siguiente error al tratar de crear el ejercicio:", error);
         });
 
         toggle();
@@ -109,7 +127,7 @@ export default function AgregarEjercicio({toggle, getExercises, routineId}) {
             <FormGroup check row>
                 <Col sm={{ offset: 2, size: 10 }}>
                 <Button color="primary" type='submit'>
-                    Crear Ejercicio
+                    Guardar
                 </Button>{' '}
                 <Button color="secondary" onClick={toggle}>
                     Cancelar

@@ -32,7 +32,6 @@ export default function VerRutina() {
     useEffect(() => {
         getRoutine();
         getExercises();
-        console.log(exercises);
     }, []);
     
     function getRoutine() {
@@ -98,17 +97,19 @@ export default function VerRutina() {
                                 <Button onClick={() => {toggleEdit(); setModalEditId(exercise.ejercicio_id)}} color="warning">
                                     <EditIcon /> Editar
                                 </Button>
-                                <Modal isOpen={modalEdit} fade={false} toggle={toggleEdit}>
+                                <Modal isOpen={modalEditId === exercise.ejercicio_id && modalEdit} fade={false} toggle={toggleEdit}>
                                     <ModalHeader toggle={toggleEdit}>Editar Ejercicio</ModalHeader>
                                     <ModalBody>
-                                        <EditarEjercicio props={{toggleDelete}} />
+                                        <EditarEjercicio id={exercise.ejercicio_id} toggle={toggleEdit} getExercises={getExercises} />
                                     </ModalBody>
                                 </Modal>
 
                                 <Button onClick={() => {toggleDelete(); setModalDeleteId(exercise.ejercicio_id)}} color="danger">
                                     <DeleteIcon /> Eliminar
                                 </Button>
-                                <Modal isOpen={modalDeleteId === exercise.ejercicio_id && modalDelete} fade={false} toggle={toggleDelete}>
+                                <Modal isOpen={modalDeleteId === exercise.ejercicio_id && modalDelete} fade={false} 
+                                    toggle={toggleDelete}>
+
                                     <ModalHeader toggle={toggleDelete}>Eliminar Ejercicio</ModalHeader>
                                     <ModalBody>
                                         <EliminarEjercicio id={exercise.ejercicio_id} toggle={toggleDelete} getExercises={getExercises} />
