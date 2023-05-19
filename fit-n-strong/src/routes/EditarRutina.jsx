@@ -89,7 +89,7 @@ export default function EditarRutina({id, toggle, getRoutines}) {
             <FormGroup check row>
                 <Col sm={{ offset: 2, size: 10 }}>
                 <Button color="primary" type='submit'>
-                    Crear Rutina
+                    Guardar
                 </Button>{' '}
                 <Button color="secondary" onClick={toggle}>
                     Cancelar

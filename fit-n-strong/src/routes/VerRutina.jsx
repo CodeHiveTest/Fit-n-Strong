@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import AgregarEjercicio from "./AgregarEjercicio";
 import EditarEjercicio from "./EditarEjercicio";
+import EliminarEjercicio from "./EliminarEjercicio";
 
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -16,10 +17,13 @@ export default function VerRutina() {
     const [modalNew, setModalNew] = useState(false);
     const [modalEdit, setModalEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
+
+    const [modalEditId, setModalEditId] = useState(0);
+    const [modalDeleteId, setModalDeleteId] = useState(0);
   
     const toggleNew = () => setModalNew(!modalNew);
     const toggleEdit = () => setModalEdit(!modalEdit);
-    const toggleDelete = () => setModalDelete(!modalDelete);
+    const toggleDelete = () => setModalDelete(!modalDelete)
 
     const [exercises, setExercises] = useState([]);
     const [routine, setRoutine] = useState({nombre: ''});
@@ -28,6 +32,7 @@ export default function VerRutina() {
     useEffect(() => {
         getRoutine();
         getExercises();
+        console.log(exercises);
     }, []);
     
     function getRoutine() {
@@ -68,7 +73,7 @@ export default function VerRutina() {
             <Modal isOpen={modalNew} fade={false} toggle={toggleNew}>
                 <ModalHeader toggle={toggleNew}>Agregar Ejercicio</ModalHeader>
                 <ModalBody>
-                    <AgregarEjercicio props={{toggleNew}} />
+                    <AgregarEjercicio toggle={toggleNew} getExercises={getExercises} routineId={id} />
                 </ModalBody>
             </Modal>
 
@@ -90,7 +95,7 @@ export default function VerRutina() {
                             <td>{exercise.duracion}</td>
                             <td>{exercise.peso}</td>
                             <td className='actions'>
-                                <Button onClick={toggleEdit} color="warning">
+                                <Button onClick={() => {toggleEdit(); setModalEditId(exercise.ejercicio_id)}} color="warning">
                                     <EditIcon /> Editar
                                 </Button>
                                 <Modal isOpen={modalEdit} fade={false} toggle={toggleEdit}>
@@ -100,22 +105,14 @@ export default function VerRutina() {
                                     </ModalBody>
                                 </Modal>
 
-                                <Button onClick={toggleDelete} color="danger">
+                                <Button onClick={() => {toggleDelete(); setModalDeleteId(exercise.ejercicio_id)}} color="danger">
                                     <DeleteIcon /> Eliminar
                                 </Button>
-                                <Modal isOpen={modalDelete} fade={false} toggle={toggleDelete}>
+                                <Modal isOpen={modalDeleteId === exercise.ejercicio_id && modalDelete} fade={false} toggle={toggleDelete}>
                                     <ModalHeader toggle={toggleDelete}>Eliminar Ejercicio</ModalHeader>
                                     <ModalBody>
-                                    ¿Está seguro que desea eliminar este ejercicio de la rutina? Esta acción no se puede deshacer...
+                                        <EliminarEjercicio id={exercise.ejercicio_id} toggle={toggleDelete} getExercises={getExercises} />
                                     </ModalBody>
-                                    <ModalFooter>
-                                    <Button color="danger" onClick={toggleDelete}>
-                                        Eliminar
-                                    </Button>{' '}
-                                    <Button color="secondary" onClick={toggleDelete}>
-                                        Cancelar
-                                    </Button>
-                                    </ModalFooter>
                                 </Modal>
                             </td>
                         </tr>
