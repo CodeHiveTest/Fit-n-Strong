@@ -86,6 +86,6 @@ describe('test cases 1', () => {
       cy.wait(1000)
       cy.get('td:last .btn-danger').click()
       cy.wait(1000)
-      cy.get('col-sm-10 .btn-danger').click()
+      cy.get('.col-sm-10 .btn-danger').click()
     })
   })
