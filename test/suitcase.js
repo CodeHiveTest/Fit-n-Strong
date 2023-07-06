@@ -28,96 +28,143 @@ describe('suitcase', function() {
     let webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.manage().window().setRect({ width: 1054, height: 824 })
     // 3 | click | linkText=Mis Rutinas | 
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.linkText("Mis Rutinas")).click()
     // 4 | click | css=.add-button | 
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.css(".add-button")).click()
     // 5 | click | id=name | 
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.id("name")).click()
     // 6 | type | id=name | nueva_rutina
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.id("name")).sendKeys("nueva_rutina")
     // 7 | click | id=grupo | 
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.id("grupo")).click()
     // 8 | type | id=grupo | todo
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.id("grupo")).sendKeys("todo")
     // 9 | click | css=.btn-primary | 
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.css(".btn-primary")).click()
     // 10 | click | css=tr:nth-child(11) .btn-success > .MuiSvgIcon-root | 
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.css("tr:nth-child(11) .btn-success > .MuiSvgIcon-root")).click()
     // 11 | click | css=.add-button | 
+    webElement = driver.findElement(By.id("myDynamicElement"));
     await driver.findElement(By.css(".add-button")).click()
     // 12 | mouseOver | css=.add-button | 
     {
       const element = await driver.findElement(By.css(".add-button"))
       await driver.actions({ bridge: true }).moveToElement(element).perform()
+      webElement = driver.findElement(By.id("myDynamicElement"));
     }
     // 13 | mouseOut | css=.add-button | 
     {
       const element = await driver.findElement(By.CSS_SELECTOR, "body")
       await driver.actions({ bridge: true }).moveToElement(element, 0, 0).perform()
+      webElement = driver.findElement(By.id("myDynamicElement"));
     }
     // 14 | click | css=form | 
     await driver.findElement(By.css("form")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 15 | click | id=name | 
     await driver.findElement(By.id("name")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 16 | type | id=name | nuevo_ejercicio
     await driver.findElement(By.id("name")).sendKeys("nuevo_ejercicio")
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 17 | click | id=reps | 
     await driver.findElement(By.id("reps")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 18 | type | id=reps | 10
     await driver.findElement(By.id("reps")).sendKeys("10")
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 19 | click | id=duration | 
     await driver.findElement(By.id("duration")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 20 | type | id=duration | 3 series
     await driver.findElement(By.id("duration")).sendKeys("3 series")
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 21 | click | id=peso | 
     await driver.findElement(By.id("peso")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 22 | type | id=peso | 69
     await driver.findElement(By.id("peso")).sendKeys("69")
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 23 | click | css=.btn-primary | 
     await driver.findElement(By.css(".btn-primary")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 24 | click | linkText=Mis Rutinas | 
     await driver.findElement(By.linkText("Mis Rutinas")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 25 | click | css=tr:nth-child(11) .btn-warning | 
     await driver.findElement(By.css("tr:nth-child(11) .btn-warning")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 26 | click | id=grupo | 
     await driver.findElement(By.id("grupo")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 27 | type | id=grupo | todo_elcuerpo
     await driver.findElement(By.id("grupo")).sendKeys("todo_elcuerpo")
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 28 | click | css=.btn-primary | 
     await driver.findElement(By.css(".btn-primary")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 29 | click | css=tr:nth-child(11) .btn-success > .MuiSvgIcon-root | 
     await driver.findElement(By.css("tr:nth-child(11) .btn-success > .MuiSvgIcon-root")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 30 | runScript | window.scrollTo(0,0) | 
     await driver.executeScript("window.scrollTo(0,0)")
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 31 | click | css=.btn-danger > .MuiSvgIcon-root | 
     await driver.findElement(By.css(".btn-danger > .MuiSvgIcon-root")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
     // 32 | mouseOver | css=.btn-danger > .MuiSvgIcon-root | 
     {
       const element = await driver.findElement(By.css(".btn-danger > .MuiSvgIcon-root"))
       await driver.actions({ bridge: true }).moveToElement(element).perform()
+      webElement = driver.findElement(By.id("myDynamicElement"));
+
     }
     // 33 | mouseOut | css=.btn-danger > .MuiSvgIcon-root | 
     {
       const element = await driver.findElement(By.CSS_SELECTOR, "body")
       await driver.actions({ bridge: true }).moveToElement(element, 0, 0).perform()
+      webElement = driver.findElement(By.id("myDynamicElement"));
+
     }
     // 34 | click | css=.btn-danger:nth-child(1) | 
     await driver.findElement(By.css(".btn-danger:nth-child(1)")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
+
     // 35 | click | linkText=Mis Rutinas | 
     await driver.findElement(By.linkText("Mis Rutinas")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
+
     // 36 | click | css=tr:nth-child(11) .btn-danger > .MuiSvgIcon-root | 
     await driver.findElement(By.css("tr:nth-child(11) .btn-danger > .MuiSvgIcon-root")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
+
     // 37 | mouseOver | css=.btn-danger:nth-child(1) | 
     {
       const element = await driver.findElement(By.css(".btn-danger:nth-child(1)"))
+      
       await driver.actions({ bridge: true }).moveToElement(element).perform()
+      webElement = driver.findElement(By.id("myDynamicElement"));
+
     }
     // 38 | mouseOut | css=tr:nth-child(11) .btn-danger > .MuiSvgIcon-root | 
     {
       const element = await driver.findElement(By.CSS_SELECTOR, "body")
       await driver.actions({ bridge: true }).moveToElement(element, 0, 0).perform()
+      webElement = driver.findElement(By.id("myDynamicElement"));
+
     }
+    
     // 39 | click | css=.btn-danger:nth-child(1) | 
     await driver.findElement(By.css(".btn-danger:nth-child(1)")).click()
+    webElement = driver.findElement(By.id("myDynamicElement"));
+
   })
 })

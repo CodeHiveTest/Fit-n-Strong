@@ -7,7 +7,7 @@ import slider3 from "./../assets/images/slider3.png";
 export default function Home() {
     return (
         <div className="container">
-            <h2 className="title">Bienvenido a <br/>Fit and Strong</h2>
+            <h2 className="title">Bienvenido, Usuario a <br/>Fit and Strong</h2>
             <div className="slider-container">
                 <UncontrolledCarousel
                 items={[
