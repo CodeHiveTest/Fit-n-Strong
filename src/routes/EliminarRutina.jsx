@@ -23,7 +23,7 @@ export default function EliminarRutina({id, toggle, getRoutines}) {
         })
         .catch(error => {
             getRoutines();
-            alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
+            //alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
         });
 
         toggle();

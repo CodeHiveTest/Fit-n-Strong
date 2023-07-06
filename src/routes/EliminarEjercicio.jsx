@@ -23,7 +23,7 @@ export default function EliminarRutina({id, toggle, getExercises}) {
         })
         .catch(error => {
             getExercises();
-            alert("Ocurrió el siguiente error al tratar de crear un nuevo ejercicio:", error);
+            //alert("Ocurrió el siguiente error al tratar de crear un nuevo ejercicio:", error);
         });
 
         toggle();
