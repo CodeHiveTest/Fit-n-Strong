@@ -17,7 +17,7 @@ export default function EditarRutina({id, toggle, getRoutines}) {
                 "Content-Type": "application/json",
             },
         })
-        .then(response => response.data)
+        .then(AxiosResponse => AxiosResponse.data)
         .then(data => {setRoutineName(data.nombre); setGrupo(data.grupo_muscular)})
         .catch(error => {
             console.log("Hubo un error al intentar obtener la rutina", error);

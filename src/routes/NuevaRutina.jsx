@@ -22,13 +22,14 @@ export default function NuevaRutina({toggle, getRoutines}) {
             nombre: routineName,
             grupo_muscular: grupo
         })
-        .then(response => response.data)
+        .then(AxiosResponse => AxiosResponse.data)
         .then(data => {
-            if(data.status === 201) {
+            if(data.status == 200) {
                 getRoutines();
             }
         })
         .catch(error => {
+            getRoutines();
             alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
         });
 

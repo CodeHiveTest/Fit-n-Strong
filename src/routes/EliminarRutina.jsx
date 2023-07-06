@@ -16,12 +16,13 @@ export default function EliminarRutina({id, toggle, getRoutines}) {
                 "Content-Type": "text/plain",
             },
         })
-        .then(response => {
-            if(response.status === 200) {
+        .then(AxiosResponse => {
+            if(AxiosResponse.status == 200) {
                 getRoutines();
             }
         })
         .catch(error => {
+            getRoutines();
             alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
         });
 

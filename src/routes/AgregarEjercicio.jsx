@@ -27,14 +27,14 @@ export default function AgregarEjercicio({toggle, getExercises, routineId}) {
             peso: peso,
             rutina_id: routineId
         })
-        .then(response => response.data)
-        .then(data => {
-            if(data.status === 201) {
+        .then(response => {
+            if(response.status == 200) {
                 getExercises();
             }
         })
         .catch(error => {
-            alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
+            getExercises();
+           //alert("Ocurrió el siguiente error al tratar de crear la rutina:", error);
         });
 
         toggle();

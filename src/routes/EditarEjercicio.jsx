@@ -19,7 +19,7 @@ export default function AgregarEjercicio({id, toggle, getExercises, routineId}) 
                 "Content-Type": "application/json",
             },
         })
-        .then(response => response.data)
+        .then(AxiosResponse => AxiosResponse.data)
         .then(data => {
             setExerciseName(data.nombre);
             setReps(data.repeticiones);
